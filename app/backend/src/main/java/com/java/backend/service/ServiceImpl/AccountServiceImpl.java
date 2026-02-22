@@ -3,6 +3,7 @@ package com.java.backend.service.ServiceImpl;
 import com.java.backend.model.User;
 import com.java.backend.model.request.AccountRequest;
 import com.java.backend.model.response.AccountResponse;
+import com.java.backend.repository.AccountInfoRepository;
 import com.java.backend.repository.AccountRepository;
 import com.java.backend.service.AccountService;
 import org.modelmapper.ModelMapper;
@@ -16,11 +17,13 @@ public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final ModelMapper modelMapper;
+    private final AccountInfoRepository accountInforRepository;
 
-    public AccountServiceImpl(AccountRepository accountRepository, BCryptPasswordEncoder bCryptPasswordEncoder, ModelMapper modelMapper) {
+    public AccountServiceImpl(AccountRepository accountRepository, BCryptPasswordEncoder bCryptPasswordEncoder, ModelMapper modelMapper, AccountInfoRepository accountInforRepository) {
         this.accountRepository = accountRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.modelMapper = modelMapper;
+        this.accountInforRepository = accountInforRepository;
     }
 
     @Override

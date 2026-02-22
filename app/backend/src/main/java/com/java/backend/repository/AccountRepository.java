@@ -4,6 +4,8 @@ import com.java.backend.model.User;
 import com.java.backend.model.request.AccountRequest;
 import org.apache.ibatis.annotations.*;
 
+import java.util.List;
+
 @Mapper
 public interface AccountRepository {
 
@@ -20,7 +22,7 @@ public interface AccountRepository {
     User findByEmail(String email);
 
     @Select("""
-        INSERT INTO users 
+        INSERT INTO users
         ( username, email, password)
         VALUES (#{username}, #{user.email}, #{user.password})
         RETURNING *
@@ -28,4 +30,5 @@ public interface AccountRepository {
     @ResultMap("appUserMapper")
     User createAccount(@Param("user")AccountRequest accountRequest, String username);
 
+    List<User>
 }
