@@ -26,11 +26,6 @@ export default function Sidebar() {
       href: "/dashboard/profile",
       icon: "👤",
     },
-    {
-      label: "Users",
-      href: "/dashboard/users",
-      icon: "👥",
-    },
   ];
 
   return (
@@ -60,34 +55,6 @@ export default function Sidebar() {
           );
         })}
       </nav>
-
-      {/* User Info & Logout */}
-      <div className="p-4 border-t border-border space-y-4">
-        {user && (
-          <div className="flex items-center gap-3">
-            <img
-              src={user.avatar}
-              alt={user.username}
-              className="w-10 h-10 rounded-full"
-            />
-            <div className="min-w-0">
-              <p className="text-sm font-medium text-foreground truncate">
-                {user.username}
-              </p>
-              <p className="text-xs text-muted-foreground truncate">
-                {user.email}
-              </p>
-            </div>
-          </div>
-        )}
-        <Button
-          onClick={handleLogout}
-          variant="outline"
-          className="w-full text-foreground border-border hover:bg-muted"
-        >
-          Logout
-        </Button>
-      </div>
     </aside>
   );
 }

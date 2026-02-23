@@ -1,9 +1,16 @@
-"use client";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../api/auth/[...nextauth]/route";
+import { redirect } from "next/navigation";
+import { getAccountInfor } from "@/service/accountService";
 
-import { useAuth } from "@/lib/auth-context";
+export default async function DashboardPage() {
+  const session = await getServerSession(authOptions);
 
-export default function DashboardPage() {
-  const { user } = useAuth();
+  if (!session?.payload?.token) {
+    redirect("/login");
+  }
+
+  const { payload } = await getAccountInfor();
 
   return (
     <div className="flex-1 overflow-auto">
@@ -11,7 +18,7 @@ export default function DashboardPage() {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">
-            Welcome back, {user?.username}! 👋
+            Welcome back, {`${payload.user.email}`}! 👋
           </h1>
           <p className="text-muted-foreground">
             Here's an overview of your workspace

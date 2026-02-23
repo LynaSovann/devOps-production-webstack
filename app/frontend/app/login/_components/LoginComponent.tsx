@@ -13,35 +13,29 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { signIn } from "next-auth/react";
 
 export default function LoginComponent() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const { login } = useAuth();
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setIsLoading(true);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
-    try {
-      if (!email || !password) {
-        setError("Please fill in all fields");
-        setIsLoading(false);
-        return;
-      }
-
-      await login(email, password);
-      router.push("/dashboard");
-    } catch (err) {
-      setError("Login failed. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
+  const onLogin = async (data: any) => {
+    await signIn("credentials", {
+      email: data.email,
+      password: data.password,
+      redirect: true,
+      callbackUrl: "/dashboard",
+    });
   };
+
   return (
     <>
       <Card className="border border-border">
@@ -50,7 +44,7 @@ export default function LoginComponent() {
           <CardDescription>Sign in to your account to continue</CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit(onLogin)} className="space-y-4">
             <div>
               <label
                 htmlFor="email"
@@ -62,8 +56,7 @@ export default function LoginComponent() {
                 id="email"
                 type="email"
                 placeholder="you@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                {...register("email", { required: true })}
                 className="bg-input border border-border text-foreground placeholder:text-muted-foreground"
               />
             </div>
@@ -78,9 +71,7 @@ export default function LoginComponent() {
               <Input
                 id="password"
                 type="password"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                {...register("password", { required: true })}
                 className="bg-input border border-border text-foreground placeholder:text-muted-foreground"
               />
             </div>

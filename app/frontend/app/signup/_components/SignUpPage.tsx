@@ -7,47 +7,32 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { signUpService } from "@/service/authService";
 
 export default function SignUpPage() {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const { signup } = useAuth();
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setIsLoading(true);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
-    try {
-      if (!username || !email || !password || !confirmPassword) {
-        setError("Please fill in all fields");
-        setIsLoading(false);
-        return;
-      }
+  const onSignUp = async (data: any) => {
+    const { email, password, confirmPassword } = data;
+    if (password !== confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
 
-      if (password !== confirmPassword) {
-        setError("Passwords do not match");
-        setIsLoading(false);
-        return;
-      }
-
-      if (password.length < 6) {
-        setError("Password must be at least 6 characters");
-        setIsLoading(false);
-        return;
-      }
-
-      await signup(username, email, password);
-      router.push("/dashboard");
-    } catch (err) {
-      setError("Signup failed. Please try again.");
-    } finally {
-      setIsLoading(false);
+    const res = await signUpService(email, password);
+    if (res.status == "201 CREATED") {
+      alert("Account created successfully!");
+      router.push("/login");
     }
   };
 
@@ -58,7 +43,7 @@ export default function SignUpPage() {
           <CardTitle>Create Account</CardTitle>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit(onSignUp)} className="space-y-4">
             <div>
               <label
                 htmlFor="email"
@@ -70,8 +55,7 @@ export default function SignUpPage() {
                 id="email"
                 type="email"
                 placeholder="you@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                {...register("email", { required: true })}
                 className="bg-input border border-border text-foreground placeholder:text-muted-foreground"
               />
             </div>
@@ -86,9 +70,8 @@ export default function SignUpPage() {
               <Input
                 id="password"
                 type="password"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                // placeholder="••••••••"
+                {...register("password", { required: true })}
                 className="bg-input border border-border text-foreground placeholder:text-muted-foreground"
               />
             </div>
@@ -103,9 +86,8 @@ export default function SignUpPage() {
               <Input
                 id="confirmPassword"
                 type="password"
-                placeholder="••••••••"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                // placeholder="••••••••"
+                {...register("confirmPassword", { required: true })}
                 className="bg-input border border-border text-foreground placeholder:text-muted-foreground"
               />
             </div>
