@@ -1,0 +1,60 @@
+Vagrant.configure("2") do |config|
+    config.vagrant.plugins = "vagrant-hostmanager"
+    config.hostmanager.enabled = true
+    config.hostmanager.manage_host = true
+
+    # Database server (PostgreSQL)
+    config.vm.define "db01" do |db|
+        db.vm.box = "centos/stream9"
+        db.vm.hostname = "db01"
+        db.vm.network "private_network", ip: "192.168.56.13"
+        db.vm.provider "virtualbox" do |vb|
+            vb.gui = false
+            vb.memory = 1024
+        end
+    end
+
+    # MinIO server (Object Storage)
+    config.vm.define "minio01" do |minio|
+        minio.vm.box = "centos/stream9"
+        minio.vm.hostname = "minio01"
+        minio.vm.network "private_network", ip: "192.168.56.14"
+        minio.vm.provider "virtualbox" do |vb|
+            vb.gui = false
+            vb.memory = 1024
+        end
+    end
+
+    # Backend server (Spring Boot - Java)
+    config.vm.define "backend01" do |backend|
+        backend.vm.box = "centos/stream9"
+        backend.vm.hostname = "backend01"
+        backend.vm.network "private_network", ip: "192.168.56.12"
+        backend.vm.provider "virtualbox" do |vb|
+            vb.gui = false
+            vb.memory = 1024
+        end
+    end
+
+    # Frontend server (Next.js - Node.js)
+    config.vm.define "frontend01" do |frontend|
+        frontend.vm.box = "ubuntu/jammy64"
+        frontend.vm.hostname = "frontend01"
+        frontend.vm.network "private_network", ip: "192.168.56.11"
+        frontend.vm.provider "virtualbox" do |vb|
+            vb.gui = false
+            vb.memory = 1024
+        end
+    end
+
+    # Web server (NGINX reverse proxy)
+    config.vm.define "web01" do |web|
+        web.vm.box = "ubuntu/jammy64"
+        web.vm.hostname = "web01"
+        web.vm.network "private_network", ip: "192.168.56.10"
+        web.vm.provider "virtualbox" do |vb|
+            vb.gui = false
+            vb.memory = 512
+        end
+    end
+end
