@@ -46,6 +46,18 @@ export const authOptions: NextAuthOptions = {
     },
   },
 
+  cookies: {
+    sessionToken: {
+      name: "next-auth.session-token",
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: false, // 🔥 IMPORTANT for HTTP (VM without HTTPS)
+      },
+    },
+  },
+
   pages: {
     signIn: "/login",
   },
