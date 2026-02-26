@@ -4,12 +4,12 @@ import { redirect } from "next/navigation";
 import { getAccountInfor } from "@/service/accountService";
 
 export default async function DashboardPage() {
-  const session = await getServerSession(authOptions);
-  console.log("Session: ", session);
+  // const session = await getServerSession(authOptions);
+  // console.log("Session: ", session);
 
-  if (!session?.payload?.token) {
-    redirect("/login");
-  }
+  // if (!session?.payload?.token) {
+  //   redirect("/login");
+  // }
 
   const { payload } = await getAccountInfor();
 
