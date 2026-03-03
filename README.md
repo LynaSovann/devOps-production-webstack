@@ -588,6 +588,8 @@ systemctl status nginx
 http://192.168.56.10
 ```
 
+**Enable Firewall for each vm for better security**
+
 ### Flow
 
 **User → web01 (NGINX) → frontend01 (Next.js) → backend01 (Spring Boot) → db01 (PostgreSQL)
